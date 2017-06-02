@@ -1,0 +1,21 @@
+#!/bin/bash
+
+function backup() {
+	SOURCE=${1}
+	TARGET=${2}
+
+	if [ -z ${SOURCE} ]; then
+		echo "ERROR. Missing SOURCE"
+		exit 1
+	fi
+
+	if [ -z ${TARGET} ]; then
+		TARGET={{ backup_root }}/`basename ${SOURCE}`
+	fi
+
+	rsync -av ${SOURCE} ${TARGET}
+}
+
+{% for path in backup_paths %}
+backup {{ path }} 
+{% endfor %}

@@ -1,0 +1,98 @@
+---
+- name: create "{{ sharegroup }}" group
+  group:
+    name: "{{ sharegroup }}"
+    gid: "{{ sharegid }}"
+    state: present 
+- name: create "{{ shareuser }}" user
+  user:
+    name: "{{ shareuser }}" 
+    createhome: no 
+    groups: "{{ sharegroup }}"
+    uid: "{{ shareuid }}"
+    append: yes
+    state: present 
+  register: newuser
+- name: generate random password for user only on creation
+  shell: /usr/bin/openssl rand -base64 32 | passwd --stdin {{ shareuser }}
+  when: newuser.changed
+- selinux:
+    policy: targeted
+    state: enforcing      
+- name: Mount disks
+  mount:
+    path: "{{ item.path }}"
+    src: UUID={{ item.UUID }}
+    fstype: ext4
+    opts: defaults
+    state: present
+  with_items:
+    - path: "{{ backup_root }}"
+      UUID: "{{ backup_UUID }}"
+    - path: "{{ main_root }}"
+      UUID: "{{ main_UUID }}"
+    - path: "{{ samba_root }}"
+      UUID: "{{ samba_UUID }}"
+
+- name: Creates directories
+  file: path={{ item }} state=directory
+  with_items:
+   - "{{ backup_root }}"
+   - "{{ main_root }}"
+   - "{{ samba_root }}"
+   - "{{ main_root }}/docker"
+   - /opt/scripts/
+
+# duck DNS
+- name: create duckdns file
+  template:
+    src: duck.sh.j2
+    dest: /opt/scripts/duck.sh
+    owner: root
+    group: root
+    mode: 0700
+
+- name: update duckdns
+  cron:
+    name: "update duckdns"
+    minute: "0"
+    hour: "2"
+    job: "/opt/scripts/duck.sh"
+
+# Backup
+- name: install the latest version of rsync
+  yum:
+    name: rsync
+    state: latest
+
+- name: create make_incremental_backup file
+  template:
+    src: make_incremental_backup.sh.j2
+    dest: /opt/scripts/make_incremental_backup.sh
+    owner: root
+    group: root
+    mode: 0700
+
+- name: create make_full_backup file
+  template:
+    src: make_full_backup.sh.j2
+    dest: /opt/scripts/make_full_backup.sh
+    owner: root
+    group: root
+    mode: 0700            
+
+- name: daily incremental backup
+  cron:
+    name: "daily incremental backup"
+    weekday: 0,1,3,4,5,6
+    minute: "0"
+    hour: "3"
+    job: "/opt/scripts/make_incremental_backup.sh >> /var/log/backup_i_`date +%F`.log "
+
+- name: rotate backup
+  cron:
+    name: "full backup"
+    minute: "0"
+    hour: "3"
+    weekday: 2
+    job: "/opt/scripts/make_full_backup.sh >> /var/log/backup_f_`date +%F`.log "

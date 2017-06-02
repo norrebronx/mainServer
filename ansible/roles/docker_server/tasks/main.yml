@@ -1,0 +1,60 @@
+---
+- name: install the latest version of python-pip
+  yum:
+    name: python-pip
+    state: latest
+
+- name: install the latest version of docker-pip
+  pip:
+    name: docker
+
+- name: Container sync
+  docker_container:
+    name: sync
+    state: started
+    restart: no
+    image: resilio/sync
+    volumes:
+      - "{{ main_root }}/btsync/:/mnt/sync"
+    ports:
+      - "8888:8888"          
+
+- name: Container transmission
+  docker_container:
+    name: transmission
+    state: started
+    restart: no
+    image: linuxserver/transmission
+    volumes:
+      - "{{ main_root }}/transmission/config:/config"
+      - "{{ main_root }}/transmission/downloads:/downloads"
+      - "{{ main_root }}/transmission/watch:/watch"
+    ports:
+      - "9091:9091"
+      - "52413:52413"
+      - "52413:51413/udp"
+    env:
+      TZ: Europe/London
+      PGID: "{{ sharegid }}"
+      PUID: "{{ shareuid }}"
+
+- name: Container samba
+  docker_container:
+    name: samba
+    state: started
+    restart: no
+    image: dperson/samba
+    ports:
+      - "139:139"
+      - "445:445"
+      - "137:137/udp"
+      - "138:138/udp"
+    volumes:
+      - "{{ samba_root }}:/Share"
+      - "{{ main_root }}/Media:/Media"
+      - "{{ main_root }}/transmission/:/Transmission"
+    command: "-n -u \"{{ shareuser }};{{ sharepassword }}\" -s \"Share;/Share;yes;no;no;{{ shareuser }}\" -s \"Media;/Media;yes;no;no;{{ shareuser }}\" -s \"Transmission;/Transmission;yes;no;no;{{ shareuser }}\""        
+    env:
+      USERID: "{{ shareuid }}"
+      GROUPID: "{{ sharegid }}"
+      TZ: Europe/London
