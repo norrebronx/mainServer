@@ -24,4 +24,4 @@ git clone https://github.com/norrebronx/mainServer.git
 
 cd mainServer/ansible
 
-ansible-playbook -i hosts sites.yml
+ansible-playbook -i hosts sites.yml	--vault-password-file ../secret.txt
