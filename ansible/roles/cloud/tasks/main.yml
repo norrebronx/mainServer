@@ -27,21 +27,12 @@
     opts: defaults
     state: present
   with_items:
-    - path: "{{ backup_root }}"
-      UUID: "{{ backup_UUID }}"
-    - path: "{{ main_root }}"
-      UUID: "{{ main_UUID }}"
-    - path: "{{ samba_root }}"
-      UUID: "{{ samba_UUID }}"
+    "{{ mount_paths }}"
 
 - name: Creates directories
   file: path={{ item }} state=directory
   with_items:
-   - "{{ backup_root }}"
-   - "{{ main_root }}"
-   - "{{ samba_root }}"
-   - "{{ main_root }}/docker"
-   - /opt/scripts/
+    "{{ path_to_create }}"
 
 # duck DNS
 - name: create duckdns file
