@@ -13,6 +13,7 @@ function backup() {
 		TARGET={{ backup_root }}/`basename ${SOURCE}`
 	fi
 
+	echo "Backup ${SOURCE} to ${TARGET}"
 	rm -rf ${TARGET}.1
 	cp -al ${TARGET}.0 ${TARGET}.1
 	cp -al ${TARGET} ${TARGET}.0

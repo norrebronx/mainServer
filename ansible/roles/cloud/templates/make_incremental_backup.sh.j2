@@ -12,7 +12,7 @@ function backup() {
 	if [ -z ${TARGET} ]; then
 		TARGET={{ backup_root }}/`basename ${SOURCE}`
 	fi
-
+	echo "Backup ${SOURCE} to ${TARGET}"
 	rsync -av ${SOURCE} ${TARGET}
 }
 
