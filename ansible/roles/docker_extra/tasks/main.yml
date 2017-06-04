@@ -1,34 +1,4 @@
 ---
-- name: Container registry
-  docker_container:
-    name: registry
-    state: started
-    restart: yes
-    image: registry:2
-    volumes:
-      -"{{ main_root }}/registry:/var/lib/registry"
-    ports:
-      - "5000:5000"
-
-- name: pull an image
-  docker_image:
-    name: quay.io/coreos/etcd:v3.0.2      
-
-- name: Tag and push to local registry
-  docker_image:
-     name: centos
-     repository: localhost:5000/centos
-     tag: 7
-     push: yes
-
-
-- name: Build an image and push it to a private repo
-  docker_image:
-    path: ./sinatra
-    name: registry.ansible.com/chouseknecht/sinatra
-    tag: v1
-    push: yes
-    
 - name: Container etcd
   docker_container:
     name: etcd
@@ -52,3 +22,18 @@
     env:
       ETCD_MACHINES: http://{{ ansible_default_ipv4.address }}:4002
 
+- name: Container gitlab
+  docker_container:
+    name: gitlab
+    state: started
+    restart: yes
+    hostname: gitlab.cloud.local
+    image: gitlab/gitlab-ce:latest
+    ports:
+      - "443:443"
+      - "80:80"
+      - "22:22"
+    volumes:
+      - "{{ main_root }}/gitlab/config:/etc/gitlab:Z"
+      - "{{ main_root }}/gitlab/logs:/var/log/gitlab:Z"
+      - "{{ main_root }}/gitlab/data:/var/opt/gitlab:Z"
