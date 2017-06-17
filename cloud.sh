@@ -16,7 +16,7 @@ rpm -ivh epel-release-7-9.noarch.rpm
 yum -y update
 yum -y install ansible
 
-ansible-galaxy install mongrelion.docker
+#ansible-galaxy install mongrelion.docker
 
 export ANSIBLE_HOST_KEY_CHECKING=False
 
