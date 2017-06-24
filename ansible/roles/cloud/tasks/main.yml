@@ -4,6 +4,7 @@
     name: "{{ sharegroup }}"
     gid: "{{ sharegid }}"
     state: present 
+
 - name: create "{{ shareuser }}" user
   user:
     name: "{{ shareuser }}" 
@@ -13,6 +14,7 @@
     append: yes
     state: present 
   register: newuser
+
 - name: generate random password for user only on creation
   shell: /usr/bin/openssl rand -base64 32 | passwd --stdin {{ shareuser }}
   when: newuser.changed
@@ -21,9 +23,11 @@
   yum:
     name: libselinux-python
     state: present 
+
 - selinux:
     policy: targeted
     state: enforcing      
+
 - name: Mount disks
   mount:
     path: "{{ item.path }}"
@@ -33,6 +37,11 @@
     state: present
   with_items:
     "{{ mount_paths }}"
+
+- name: Clean docker path
+  file:
+    state: absent
+    path: "{{ main_root }}/docker/"
 
 - name: Creates directories
   file: path={{ item }} state=directory

@@ -1,0 +1,45 @@
+---
+- name: Ensure selinux python bindings are installed
+  yum:
+    name: libselinux-python
+    state: present 
+
+- selinux:
+    policy: targeted
+    state: permissive
+
+- service:
+    name: firewalld
+    state: stopped
+    enabled: false
+
+- service:
+    name: NetworkManager
+    state: stopped
+    enabled: false
+
+- name: Install rdo
+  yum:
+    name: https://www.rdoproject.org/repos/rdo-release.rpm
+    state: present
+
+# open stack configuration
+- name: create answer.txt file
+  template:
+    src: answer.txt.j2
+    dest: /root/answer.txt
+    owner: root
+    group: root
+    mode: 0600
+
+- name: Install openstack-packstack
+  yum:
+    name: openstack-packstack
+    state: latest
+  register: openstack
+
+
+- name: Install openstack
+  shell: packstack --answer-file /root/answer.txt > /root/packstack.log
+  args:
+    creates: /root/packstack.log

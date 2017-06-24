@@ -32,23 +32,29 @@
     group: root
     mode: 0700
 
-- name: create daemon.json file
-  template:
-    src: daemon.json.j2
-    dest: /etc/docker/daemon.json
-    owner: root
-    group: root
-    mode: 0644
+# - name: create daemon.json file
+#   template:
+#     src: daemon.json.j2
+#     dest: /etc/docker/daemon.json
+#     owner: root
+#     group: root
+#     mode: 0644
 
 - service:
     name: docker
     state: restarted
     enabled: true
 
-- name: Fetch minimesos
-  command: wget https://minimesos.org/install -O install.sh
-  args:
-    creates: install.sh
+- name: Download minimesos
+  get_url:
+    url: https://minimesos.org/install
+    dest: install.sh
+    mode: 0700
+
+# - name: Fetch minimesos
+#   command: wget https://minimesos.org/install -O install.sh
+#   args:
+#     creates: install.sh
 
 - name: Install minimesos
   command: sh install.sh
@@ -64,6 +70,6 @@
   command: /root/.minimesos/bin/minimesos init
   when: minimesosInstall.changed
 
-- name: Start minimesos
-  command: /root/.minimesos/bin/minimesos up --mapPortsToHost
-  when: minimesosInstall.changed
+# - name: Start minimesos
+#   command: /root/.minimesos/bin/minimesos up --mapPortsToHost
+#   when: minimesosInstall.changed

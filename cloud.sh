@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mkdir /root/.ssh
+mkdir /root/.ssh-keygen
 
 ssh-keygen -f /root/.ssh/id_rsa -P ""
 cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
@@ -18,7 +18,7 @@ yum -y install ansible
 
 #ansible-galaxy install mongrelion.docker
 
-export ANSIBLE_HOST_KEY_CHECKING=False
+export ANSIBLE_HOST_KEY_CHECKING=false
 
 git clone https://github.com/norrebronx/mainServer.git
 

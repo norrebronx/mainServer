@@ -6,4 +6,6 @@
 
   roles:
     - cloud
-    - minimesos
+    # - docker_server
+    # - openstack
+    # - minimesos
