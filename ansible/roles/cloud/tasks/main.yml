@@ -19,15 +19,6 @@
   shell: /usr/bin/openssl rand -base64 32 | passwd --stdin {{ shareuser }}
   when: newuser.changed
 
-- name: Ensure selinux python bindings are installed
-  yum:
-    name: libselinux-python
-    state: present 
-
-- selinux:
-    policy: targeted
-    state: enforcing      
-
 - name: Mount disks
   mount:
     path: "{{ item.path }}"

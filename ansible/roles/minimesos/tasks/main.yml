@@ -1,60 +1,14 @@
 ---
-- name: Install yum-utils
-  yum:
-    name: yum-utils
-    state: latest
-
-- name: Install device-mapper-persistent-data
-  yum:
-    name: device-mapper-persistent-data
-    state: latest
-
-- name: Install lvm2
-  yum:
-    name: lvm2
-    state: latest
-
-- name: Add repository Docker
-  command: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-  args:
-    creates: /etc/yum.repos.d/docker-ce.repo
-
-- name: Install docker-ce
-  yum:
-    name: docker-ce
-    state: latest
-
-- name: Creates directory
-  file:
-    path: /etc/docker
-    state: directory
-    owner: root
-    group: root
-    mode: 0700
-
-# - name: create daemon.json file
-#   template:
-#     src: daemon.json.j2
-#     dest: /etc/docker/daemon.json
-#     owner: root
-#     group: root
-#     mode: 0644
-
-- service:
-    name: docker
-    state: restarted
-    enabled: true
-
 - name: Download minimesos
   get_url:
     url: https://minimesos.org/install
     dest: install.sh
     mode: 0700
 
-# - name: Fetch minimesos
-#   command: wget https://minimesos.org/install -O install.sh
-#   args:
-#     creates: install.sh
+- name: Fetch minimesos
+  command: wget https://minimesos.org/install -O install.sh
+  args:
+    creates: install.sh
 
 - name: Install minimesos
   command: sh install.sh
@@ -70,6 +24,6 @@
   command: /root/.minimesos/bin/minimesos init
   when: minimesosInstall.changed
 
-# - name: Start minimesos
-#   command: /root/.minimesos/bin/minimesos up --mapPortsToHost
-#   when: minimesosInstall.changed
+- name: Start minimesos
+  command: /root/.minimesos/bin/minimesos up --mapPortsToHost
+  when: minimesosInstall.changed
