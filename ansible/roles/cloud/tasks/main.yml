@@ -29,11 +29,6 @@
   with_items:
     "{{ mount_paths }}"
 
-- name: Clean docker path
-  file:
-    state: absent
-    path: "{{ main_root }}/docker/"
-
 - name: Creates directories
   file: path={{ item }} state=directory
   with_items:
