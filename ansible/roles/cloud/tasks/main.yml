@@ -25,7 +25,7 @@
     src: UUID={{ item.UUID }}
     fstype: ext4
     opts: defaults
-    state: present
+    state: mounted
   with_items:
     "{{ mount_paths }}"
 
@@ -33,6 +33,11 @@
   file: path={{ item }} state=directory
   with_items:
     "{{ path_to_create }}"
+
+- name: Ensure selinux python bindings are installed
+  yum:
+    name: libselinux-python
+    state: present 
 
 # duck DNS
 - name: create duckdns file

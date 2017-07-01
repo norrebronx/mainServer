@@ -8,10 +8,10 @@
     policy: targeted
     state: permissive
 
-- service:
-    name: firewalld
-    state: stopped
-    enabled: false
+ - service:
+     name: firewalld
+     state: stopped
+     enabled: false
 
 - service:
     name: NetworkManager
@@ -36,7 +36,6 @@
   yum:
     name: openstack-packstack
     state: latest
-  register: openstack
 
 
 - name: Install openstack

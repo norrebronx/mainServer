@@ -1,13 +1,4 @@
 ---
-- name: install the latest version of python-pip
-  yum:
-    name: python-pip
-    state: latest
-
-- name: install the latest version of docker-pip
-  pip:
-    name: docker
-
 - name: Container sync
   docker_container:
     name: sync
@@ -75,21 +66,21 @@
       PLEX_PASSWORD: "{{ plex_password }}"
       RUN_AS_ROOT: FALSE
 
-- name: Container gitlab
-  docker_container:
-    name: gitlab
-    state: started
-    restart: yes
-    hostname: gitlab.cloud.local
-    image: gitlab/gitlab-ce:latest
-    ports:
-      #- "443:443"
-      - "8080:80"
-      - "2222:22"
-    volumes:
-      - "{{ main_root }}/gitlab/config:/etc/gitlab:Z"
-      - "{{ main_root }}/gitlab/logs:/var/log/gitlab:Z"
-      - "{{ main_root }}/gitlab/data:/var/opt/gitlab:Z"
+# - name: Container gitlab
+#   docker_container:
+#     name: gitlab
+#     state: started
+#     restart: yes
+#     hostname: gitlab.cloud.local
+#     image: gitlab/gitlab-ce:latest
+#     ports:
+#       #- "443:443"
+#       - "8080:80"
+#       - "2222:22"
+#     volumes:
+#       - "{{ main_root }}/gitlab/config:/etc/gitlab:Z"
+#       - "{{ main_root }}/gitlab/logs:/var/log/gitlab:Z"
+#       - "{{ main_root }}/gitlab/data:/var/opt/gitlab:Z"
 
 
 
@@ -115,19 +106,3 @@
 #     network_mode: host
 #     env:
 #       ETCD_MACHINES: http://{{ ansible_default_ipv4.address }}:4002
-
-# - name: Container gitlab
-#   docker_container:
-#     name: gitlab
-#     state: started
-#     restart: yes
-#     hostname: gitlab.cloud.local
-#     image: gitlab/gitlab-ce:latest
-#     published_ports:
-#       #- "443:443"
-#       - "8080:80"
-#       - "2222:22"
-#     volumes:
-#       - "{{ main_root }}/gitlab/config:/etc/gitlab:Z"
-#       - "{{ main_root }}/gitlab/logs:/var/log/gitlab:Z"
-#       - "{{ main_root }}/gitlab/data:/var/opt/gitlab:Z"
