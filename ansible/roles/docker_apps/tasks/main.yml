@@ -66,9 +66,9 @@
 #       PLEX_PASSWORD: "{{ plex_password }}"
 #       RUN_AS_ROOT: FALSE
 
-- iptables_raw:
-    name: allow_tcp_32400
-    rules: '-A INPUT -p tcp -m state --dport 32400 --state NEW,ESTABLISHED -j ACCEPT'
+#- iptables_raw:
+#    name: allow_tcp_32400
+#    rules: '-A INPUT -p tcp -m state --dport 32400 --state NEW,ESTABLISHED -j ACCEPT'
 
 - name: Container Plex
   docker_container:
@@ -82,8 +82,8 @@
       - "{{ main_root }}/plexConfig:/config"
       - "{{ main_root }}/tmp:/transcode"
     env:
-      USERID: "{{ shareuid }}"
-      GROUPID: "{{ sharegid }}"
+      PGID: "{{ sharegid }}"
+      PUID: "{{ shareuid }}"
       TZ: Europe/London
       VERSION: latest
 
