@@ -85,6 +85,7 @@
       USERID: "{{ shareuid }}"
       GROUPID: "{{ sharegid }}"
       TZ: Europe/London
+      VERSION: latest
 
 # - name: Container gitlab
 #   docker_container:
