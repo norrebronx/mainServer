@@ -8,9 +8,7 @@ cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
 chmod 600 /root/.ssh/authorized_keys
 chmod 600 /root/.ssh/id_rsa
 
-yum -y install vim-enhanced wget git
-
-yum install epel-release
+yum -y install vim-enhanced wget git epel-release
 
 yum -y update
 yum -y install ansible
