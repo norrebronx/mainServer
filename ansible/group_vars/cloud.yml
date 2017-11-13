@@ -32,7 +32,7 @@ mount_paths:
   - path: "{{ backup_root }}"
     UUID: "15287294-e926-4d6a-8060-3637ee32bc3c"
   - path: "{{ main_root }}"
-    UUID: "8acc5c2c-5367-4e84-97be-922b4cdee0e4"
+    UUID: "312d931d-8d4f-475a-b416-8419af986023"
 
 path_to_create:
   - "{{ backup_root }}"
