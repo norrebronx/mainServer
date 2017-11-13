@@ -22,7 +22,7 @@ duckdnstoken: !vault |
 
 backup_root: /mnt/backup
 main_root: /mnt/main
-samba_root: /mnt/samba
+samba_root: /mnt/main/samba
 
 backup_paths:
   - "{{ main_root }}/btsync/"
@@ -30,11 +30,9 @@ backup_paths:
   - "{{ samba_root }}/Fotos/"
 mount_paths:
   - path: "{{ backup_root }}"
-    UUID: 15287294-e926-4d6a-8060-3637ee32bc3c
-  - path: "{{ samba_root }}"
-    UUID: 4aa8cc51-517d-4b9d-af0b-8425fd7a5f9e
+    UUID: "/dev/sdd1"
   - path: "{{ main_root }}"
-    UUID: ae6b6b66-8cd3-43b8-9e40-126ea673234d
+    UUID: "/dev/md0"
 
 path_to_create:
   - "{{ backup_root }}"
