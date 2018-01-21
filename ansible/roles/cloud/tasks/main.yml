@@ -39,6 +39,25 @@
     name: libselinux-python
     state: present 
 
+- name: Install samba
+  yum:
+    name: samba
+    state: present
+
+- name: Install samba
+  yum:
+    name: samba-client
+    state: present
+
+- name: Install samba
+  yum:
+    name: samba-common
+    state: present
+
+- service:
+    name: wpa_supplicant
+    enabled: no
+
 # duck DNS
 - name: create duckdns file
   template:
